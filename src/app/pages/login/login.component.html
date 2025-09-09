@@ -1,0 +1,49 @@
+<!-- Fondo centrado con flex layout -->
+<div
+  style="display:flex; justify-content:center; align-items:center; height:100vh; background: linear-gradient(135deg, #2196f3, #21cbf3);">
+
+  <mat-card appearance="outlined"
+    style="width: 380px; padding: 2rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+
+    <mat-card-header>
+      <mat-card-title style="text-align:center; font-size:1.8rem; color:#1976d2;">Iniciar Sesión</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" style="margin-top:1rem;">
+
+      <!-- Email -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="email?.hasError('required')">El email es obligatorio</mat-error>
+        <mat-error *ngIf="email?.hasError('email')">Debe ser un email válido</mat-error>
+      </mat-form-field>
+
+      <!-- Contraseña -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="password?.hasError('required')">La contraseña es obligatoria</mat-error>
+        <mat-error *ngIf="password?.hasError('minlength')">Debe tener al menos 6 caracteres</mat-error>
+      </mat-form-field>
+
+      <!-- Botón -->
+      <button mat-raised-button color="primary" class="full-width" [disabled]="loginForm.invalid"
+        style="margin-top:1rem;">
+        Entrar
+      </button>
+    </form>
+
+    <mat-divider style="margin:1rem 0;"></mat-divider>
+
+    <p style="text-align:center; font-weight:500;">
+      ¿No tienes cuenta?
+      <a routerLink="/register" style="color:#1976d2;">Regístrate aquí</a>
+    </p>
+
+  </mat-card>
+</div>

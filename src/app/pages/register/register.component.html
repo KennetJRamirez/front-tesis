@@ -1,0 +1,65 @@
+<div
+  style="display:flex; justify-content:center; align-items:center; height:100vh; background: linear-gradient(135deg, #2196f3, #21cbf3);">
+
+  <mat-card appearance="outlined"
+    style="width: 400px; padding: 2rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+
+    <mat-card-header>
+      <mat-card-title style="text-align:center; font-size:1.8rem; color:#1976d2;">Registro</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="margin-top:1rem;">
+
+      <!-- Nombre -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" />
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error *ngIf="nombre?.hasError('required')">El nombre es obligatorio</mat-error>
+        <mat-error *ngIf="nombre?.hasError('minlength')">Debe tener al menos 3 caracteres</mat-error>
+      </mat-form-field>
+
+      <!-- Teléfono -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="telefono" />
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-error *ngIf="telefono?.hasError('required')">El teléfono es obligatorio</mat-error>
+        <mat-error *ngIf="telefono?.hasError('pattern')">Debe tener 8 dígitos</mat-error>
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="email?.hasError('required')">El email es obligatorio</mat-error>
+        <mat-error *ngIf="email?.hasError('email')">Debe ser un email válido</mat-error>
+      </mat-form-field>
+
+      <!-- Contraseña -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="password?.hasError('required')">La contraseña es obligatoria</mat-error>
+        <mat-error *ngIf="password?.hasError('minlength')">Debe tener al menos 8 caracteres</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="full-width" [disabled]="registerForm.invalid"
+        style="margin-top:1rem;">
+        Registrarse
+      </button>
+    </form>
+
+    <mat-divider style="margin:1rem 0;"></mat-divider>
+
+    <p style="text-align:center; font-weight:500;">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login" style="color:#1976d2;">Inicia sesión aquí</a>
+    </p>
+
+  </mat-card>
+</div>
