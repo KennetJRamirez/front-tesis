@@ -1,1 +1,73 @@
-<p>dashboard works!</p>
+<mat-sidenav-container class="dashboard-container">
+
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav [mode]="isScreenSmall ? 'over' : 'side'" [(opened)]="sidebarOpened" class="dashboard-sidebar"
+    fixedInViewport>
+    <mat-toolbar color="primary" class="sidebar-header">
+      Menú
+    </mat-toolbar>
+
+    <mat-nav-list>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>person</mat-icon> Perfil
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item (click)="setContent('perfilMiCuenta')">
+            <mat-icon>account_circle</mat-icon> Mi Cuenta
+          </mat-list-item>
+          <mat-list-item (click)="setContent('perfilPassword')">
+            <mat-icon>lock</mat-icon> Cambiar Contraseña
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-list-item (click)="setContent('productos')">
+        <mat-icon>inventory</mat-icon> Productos
+      </mat-list-item>
+
+      <mat-list-item (click)="logout()">
+        <mat-icon>logout</mat-icon> Cerrar Sesión
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Contenido principal -->
+  <mat-sidenav-content>
+
+    <!-- Header -->
+    <mat-toolbar color="primary" class="dashboard-header">
+      <button mat-icon-button (click)="sidenav.toggle()" *ngIf="isScreenSmall">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="welcome-text">Bienvenido, {{ userData?.nombre || 'Usuario' }}</span>
+    </mat-toolbar>
+
+    <!-- Contenido dinámico -->
+    <div class="dashboard-content">
+      <ng-container [ngSwitch]="activeContent">
+        <app-perfil *ngSwitchCase="'perfilMiCuenta'" [showSection]="'miCuenta'" [usuario]="userData"></app-perfil>
+        <app-perfil *ngSwitchCase="'perfilPassword'" [showSection]="'cambiarPassword'"
+          [usuario]="userData"></app-perfil>
+
+        <mat-card *ngSwitchCase="'productos'" class="dashboard-card">
+          <mat-card-title>Productos</mat-card-title>
+          <mat-card-content>
+            Aquí iría la lista de productos.
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngSwitchDefault class="dashboard-card">
+          <mat-card-title>Dashboard</mat-card-title>
+          <mat-card-content>
+            Selecciona una opción del menú para comenzar.
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

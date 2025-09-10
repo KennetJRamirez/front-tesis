@@ -59,7 +59,6 @@ export class LoginComponent {
         .subscribe((res) => {
           if (res) {
             console.log('Usuario logueado:', res);
-            // Guardamos token y rol en cookies
             this.authService.saveToken(res.token, res.rol);
             this.router.navigate(['/dashboard']);
           }

@@ -1,56 +1,74 @@
-// src/app/pages/dashboard/dashboard.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { PerfilComponent } from '../perfil/perfil.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatCardModule],
-  template: `
-    <mat-card>
-      <h2>Dashboard</h2>
-      <p>Bienvenido, rol: {{ userRole }}</p>
-
-      <!-- Funciones por rol -->
-      <div *ngIf="userRole === 3">
-        <button mat-raised-button color="primary">Crear Paquete</button>
-        <button mat-raised-button color="accent">Gestionar Usuarios</button>
-      </div>
-
-      <div *ngIf="userRole === 2">
-        <button mat-raised-button color="primary">Ver Mis Entregas</button>
-      </div>
-
-      <div *ngIf="userRole === 1">
-        <button mat-raised-button color="primary">Ver Productos</button>
-      </div>
-
-      <button mat-stroked-button color="warn" (click)="logout()">
-        Cerrar sesión
-      </button>
-    </mat-card>
-  `,
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    PerfilComponent,
+  ],
 })
 export class DashboardComponent implements OnInit {
   userRole: number | null = null;
+  userData: any = null;
+  activeContent: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | '' = '';
+  sidebarOpened: boolean = true;
+  isScreenSmall: boolean = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private usuarioService: UsuarioService
+  ) {}
 
   ngOnInit() {
     this.userRole = this.auth.getUserRole();
-    if (!this.userRole) {
-      this.router.navigate(['/login']);
-    }
+    if (!this.userRole) return;
+
+    this.usuarioService.getProfile().subscribe({
+      next: (data) => (this.userData = data),
+      error: (err) => console.error('Error cargando perfil:', err),
+    });
+
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreen();
+  }
+
+  checkScreen() {
+    this.isScreenSmall = window.innerWidth < 768;
+    this.sidebarOpened = !this.isScreenSmall;
+  }
+
+  setContent(section: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | '') {
+    this.activeContent = section;
   }
 
   logout() {
-    this.auth.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
+    this.auth.logout().subscribe();
   }
 }
