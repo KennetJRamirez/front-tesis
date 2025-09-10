@@ -8,7 +8,6 @@
     </mat-toolbar>
 
     <mat-nav-list>
-
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -29,6 +28,11 @@
         <mat-icon>inventory</mat-icon> Productos
       </mat-list-item>
 
+      <!-- Solo mostrar administración si el rol es 3 -->
+      <mat-list-item *ngIf="userRole === 3" (click)="setContent('admin')">
+        <mat-icon>admin_panel_settings</mat-icon> Administración
+      </mat-list-item>
+
       <mat-list-item (click)="logout()">
         <mat-icon>logout</mat-icon> Cerrar Sesión
       </mat-list-item>
@@ -37,8 +41,6 @@
 
   <!-- Contenido principal -->
   <mat-sidenav-content>
-
-    <!-- Header -->
     <mat-toolbar color="primary" class="dashboard-header">
       <button mat-icon-button (click)="sidenav.toggle()" *ngIf="isScreenSmall">
         <mat-icon>menu</mat-icon>
@@ -46,20 +48,18 @@
       <span class="welcome-text">Bienvenido, {{ userData?.nombre || 'Usuario' }}</span>
     </mat-toolbar>
 
-    <!-- Contenido dinámico -->
     <div class="dashboard-content">
       <ng-container [ngSwitch]="activeContent">
         <app-perfil *ngSwitchCase="'perfilMiCuenta'" [showSection]="'miCuenta'" [usuario]="userData"></app-perfil>
         <app-perfil *ngSwitchCase="'perfilPassword'" [showSection]="'cambiarPassword'"
           [usuario]="userData"></app-perfil>
-
         <mat-card *ngSwitchCase="'productos'" class="dashboard-card">
           <mat-card-title>Productos</mat-card-title>
           <mat-card-content>
             Aquí iría la lista de productos.
           </mat-card-content>
         </mat-card>
-
+        <app-admin *ngSwitchCase="'admin'"></app-admin>
         <mat-card *ngSwitchDefault class="dashboard-card">
           <mat-card-title>Dashboard</mat-card-title>
           <mat-card-content>
@@ -68,6 +68,5 @@
         </mat-card>
       </ng-container>
     </div>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

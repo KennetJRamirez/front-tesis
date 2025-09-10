@@ -13,6 +13,8 @@ import { UsuarioService } from '../../services/usuario.service';
 import { PerfilComponent } from '../perfil/perfil.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { AdminComponent } from './admin/admin.component';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -29,12 +31,18 @@ import { Router } from '@angular/router';
     MatToolbarModule,
     MatExpansionModule,
     PerfilComponent,
+    AdminComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
   userRole: number | null = null;
   userData: any = null;
-  activeContent: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | '' = '';
+  activeContent:
+    | 'perfilMiCuenta'
+    | 'perfilPassword'
+    | 'productos'
+    | 'admin'
+    | '' = '';
   sidebarOpened: boolean = true;
   isScreenSmall: boolean = false;
 
@@ -66,7 +74,9 @@ export class DashboardComponent implements OnInit {
     this.sidebarOpened = !this.isScreenSmall;
   }
 
-  setContent(section: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | '') {
+  setContent(
+    section: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | 'admin' | ''
+  ) {
     this.activeContent = section;
   }
 
@@ -84,14 +94,14 @@ export class DashboardComponent implements OnInit {
       if (result.isConfirmed) {
         this.auth.logout().subscribe({
           next: () => {
-            this.auth.deleteToken(); // limpiar token
+            this.auth.deleteToken();
             Swal.fire({
               icon: 'success',
               title: 'Sesión cerrada',
               showConfirmButton: false,
               timer: 1200,
             });
-            this.router.navigate(['/login']); // redirigir
+            this.router.navigate(['/login']);
           },
           error: (err) => {
             console.error('Error al hacer logout:', err);

@@ -1,0 +1,74 @@
+<mat-card style="padding: 3rem; margin: 2rem; max-width: 1200px; margin-left:auto; margin-right:auto;">
+  <h2 style="margin-bottom: 1rem;">Gestión de Usuarios</h2>
+
+  <!-- Búsqueda estilizada -->
+  <div class="search-container">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      matInput
+      placeholder="Buscar por nombre o email"
+      [(ngModel)]="searchKey"
+      (keyup)="applyFilter()"
+      class="search-input"
+    />
+    <button mat-icon-button color="warn" class="clear-btn" *ngIf="searchKey" (click)="clearFilter()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">ID</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.id}} </mat-cell>
+    </ng-container>
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Nombre</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.nombre}} </mat-cell>
+    </ng-container>
+
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Email</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+    </ng-container>
+
+    <!-- Rol -->
+    <ng-container matColumnDef="rol">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Rol</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        {{ getRoleName(user.rol) }}
+        <button mat-icon-button color="primary" (click)="changeRole(user, user.rol === 1 ? 2 : 1)">
+          <mat-icon>swap_horiz</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Activo -->
+    <ng-container matColumnDef="activo">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Activo</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        {{ user.activo ? 'Sí' : 'No' }}
+        <button mat-icon-button color="warn" (click)="toggleActive(user)">
+          <mat-icon>{{ user.activo ? 'block' : 'check_circle' }}</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Acciones</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <button mat-raised-button color="accent" (click)="viewUser(user.id)">Ver</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <!-- Paginador -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</mat-card>
