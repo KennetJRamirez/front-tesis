@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UsuarioService } from '../../services/usuario.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -61,8 +62,23 @@ export class PerfilComponent implements OnInit {
   guardarCambios() {
     if (this.perfilForm.valid) {
       this.usuarioService.updateProfile(this.perfilForm.value).subscribe({
-        next: () => alert('Perfil actualizado con éxito 🚀'),
-        error: (err) => console.error('Error al actualizar:', err),
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Perfil actualizado',
+            text: '¡Tus datos se han guardado correctamente!',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        },
+        error: (err) => {
+          console.error('Error al actualizar:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar el perfil',
+          });
+        },
       });
     }
   }
@@ -71,12 +87,22 @@ export class PerfilComponent implements OnInit {
     if (this.passwordForm.valid) {
       this.usuarioService.changePassword(this.passwordForm.value).subscribe({
         next: () => {
-          alert('Contraseña cambiada');
+          Swal.fire({
+            icon: 'success',
+            title: 'Contraseña cambiada',
+            text: 'Tu nueva contraseña ha sido guardada correctamente',
+            timer: 2000,
+            showConfirmButton: false,
+          });
           this.passwordForm.reset();
         },
         error: (err) => {
           console.error('Error al cambiar contraseña:', err);
-          alert('Error al cambiar contraseña');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cambiar la contraseña',
+          });
         },
       });
     }

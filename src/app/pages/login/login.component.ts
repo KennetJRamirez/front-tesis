@@ -10,7 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { catchError, of } from 'rxjs';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -41,31 +41,51 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const loginData = this.loginForm.getRawValue() as {
-        email: string;
-        password: string;
-      };
+    if (this.loginForm.invalid) {
+      // Validación de campos
+      const errors = [];
+      if (this.email?.invalid) errors.push('Email inválido');
+      if (this.password?.invalid) errors.push('Contraseña inválida');
 
-      this.authService
-        .login(loginData)
-        .pipe(
-          catchError((err) => {
-            console.error('Error al loguear:', err);
-            alert('Credenciales incorrectas');
-            return of(null);
-          })
-        )
-        .subscribe((res) => {
-          if (res) {
-            console.log('Usuario logueado:', res);
-            this.authService.saveToken(res.token, res.rol);
-            this.router.navigate(['/dashboard']);
-          }
-        });
+      Swal.fire({
+        icon: 'error',
+        title: 'Formulario inválido',
+        html: errors.join('<br>'),
+      });
+      return;
     }
-  }
 
+    const loginData = this.loginForm.getRawValue() as {
+      email: string;
+      password: string;
+    };
+
+    this.authService
+      .login(loginData)
+      .pipe(
+        catchError((err) => {
+          console.error('Error al loguear:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Credenciales incorrectas',
+            text: 'Por favor verifica tu email y contraseña',
+          });
+          return of(null);
+        })
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.authService.saveToken(res.token, res.rol);
+          Swal.fire({
+            icon: 'success',
+            title: 'Bienvenido',
+            text: 'Has iniciado sesión correctamente',
+            showConfirmButton: false,
+            timer: 1200,
+          }).then(() => this.router.navigate(['/dashboard']));
+        }
+      });
+  }
   get email() {
     return this.loginForm.get('email');
   }

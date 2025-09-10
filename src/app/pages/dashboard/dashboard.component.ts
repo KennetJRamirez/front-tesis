@@ -11,7 +11,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { PerfilComponent } from '../perfil/perfil.component';
-
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -39,7 +40,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -69,6 +71,38 @@ export class DashboardComponent implements OnInit {
   }
 
   logout() {
-    this.auth.logout().subscribe();
+    Swal.fire({
+      title: '¿Quieres cerrar sesión?',
+      text: 'Tu sesión se cerrará',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.auth.logout().subscribe({
+          next: () => {
+            this.auth.deleteToken(); // limpiar token
+            Swal.fire({
+              icon: 'success',
+              title: 'Sesión cerrada',
+              showConfirmButton: false,
+              timer: 1200,
+            });
+            this.router.navigate(['/login']); // redirigir
+          },
+          error: (err) => {
+            console.error('Error al hacer logout:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'No se pudo cerrar sesión 😅',
+            });
+          },
+        });
+      }
+    });
   }
 }

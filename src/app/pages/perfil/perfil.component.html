@@ -4,7 +4,8 @@
   <mat-card *ngIf="showSection === 'miCuenta'" class="perfil-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>person</mat-icon> Mi Cuenta
+        <mat-icon>person</mat-icon>
+        Mi Cuenta
       </mat-card-title>
     </mat-card-header>
 
@@ -15,28 +16,34 @@
           <mat-label>Nombre</mat-label>
           <mat-icon matPrefix>person</mat-icon>
           <input matInput formControlName="nombre" />
-          <mat-error *ngIf="perfilForm.get('nombre')?.invalid">Nombre requerido</mat-error>
+          <mat-error *ngIf="perfilForm.get('nombre')?.invalid">
+            Nombre requerido
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Teléfono</mat-label>
           <mat-icon matPrefix>phone</mat-icon>
           <input matInput formControlName="telefono" />
-          <mat-error *ngIf="perfilForm.get('telefono')?.invalid">Teléfono requerido</mat-error>
+          <mat-error *ngIf="perfilForm.get('telefono')?.invalid">
+            Teléfono requerido
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <mat-icon matPrefix>email</mat-icon>
           <input matInput formControlName="email" />
-          <mat-error *ngIf="perfilForm.get('email')?.invalid">Email válido requerido</mat-error>
+          <mat-error *ngIf="perfilForm.get('email')?.invalid">
+            Email válido requerido
+          </mat-error>
         </mat-form-field>
 
         <div class="perfil-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="perfilForm.invalid">Guardar
-            Cambios</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="perfilForm.invalid">
+            Guardar Cambios
+          </button>
         </div>
-
       </form>
     </mat-card-content>
   </mat-card>
@@ -45,7 +52,8 @@
   <mat-card *ngIf="showSection === 'cambiarPassword'" class="perfil-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>lock</mat-icon> Cambiar Contraseña
+        <mat-icon>lock</mat-icon>
+        Cambiar Contraseña
       </mat-card-title>
     </mat-card-header>
 
@@ -56,7 +64,9 @@
           <mat-label>Contraseña Actual</mat-label>
           <mat-icon matPrefix>vpn_key</mat-icon>
           <input matInput type="password" formControlName="currentPassword" />
-          <mat-error *ngIf="passwordForm.get('currentPassword')?.invalid">Contraseña requerida</mat-error>
+          <mat-error *ngIf="passwordForm.get('currentPassword')?.invalid">
+            Contraseña requerida
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -69,9 +79,10 @@
         </mat-form-field>
 
         <div class="perfil-actions">
-          <button mat-raised-button color="accent" type="submit" [disabled]="passwordForm.invalid">Cambiar</button>
+          <button mat-raised-button color="accent" type="submit" [disabled]="passwordForm.invalid">
+            Cambiar
+          </button>
         </div>
-
       </form>
     </mat-card-content>
   </mat-card>

@@ -13,10 +13,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
-    // 🔥 aquí la magia: habilita interceptores de DI
     provideHttpClient(withInterceptorsFromDi()),
-
-    // tu interceptor
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
 };

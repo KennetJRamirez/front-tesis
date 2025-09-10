@@ -10,6 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { catchError, of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -42,33 +43,52 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      const registerData = this.registerForm.getRawValue() as {
-        nombre: string;
-        telefono: string;
-        email: string;
-        password: string;
-      };
+onSubmit() {
+  if (this.registerForm.invalid) {
+    const errors = [];
+    if (this.nombre?.invalid) errors.push('Nombre inválido (mín. 3 caracteres)');
+    if (this.telefono?.invalid) errors.push('Teléfono inválido (8 dígitos)');
+    if (this.email?.invalid) errors.push('Email inválido');
+    if (this.password?.invalid) errors.push('Contraseña inválida (mín. 8 caracteres)');
 
-      this.authService
-        .register(registerData)
-        .pipe(
-          catchError((err) => {
-            console.error('Error al registrar:', err);
-            alert('No se pudo registrar el usuario');
-            return of(null);
-          })
-        )
-        .subscribe((res) => {
-          if (res) {
-            console.log('Usuario registrado:', res);
-            alert('Registro exitoso, ahora puedes iniciar sesión');
-            this.router.navigate(['/login']);
-          }
-        });
-    }
+    Swal.fire({
+      icon: 'error',
+      title: 'Formulario inválido',
+      html: errors.join('<br>'),
+    });
+    return;
   }
+
+  const registerData = this.registerForm.getRawValue() as {
+    nombre: string;
+    telefono: string;
+    email: string;
+    password: string;
+  };
+
+  this.authService.register(registerData).pipe(
+    catchError((err) => {
+      console.error('Error al registrar:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo registrar el usuario 😅',
+      });
+      return of(null);
+    })
+  ).subscribe((res) => {
+    if (res) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Registro exitoso',
+        text: 'Ahora puedes iniciar sesión',
+        showConfirmButton: false,
+        timer: 1200
+      }).then(() => this.router.navigate(['/login']));
+    }
+  });
+}
+
 
   get nombre() {
     return this.registerForm.get('nombre');
