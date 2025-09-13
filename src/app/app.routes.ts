@@ -5,6 +5,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { AdminComponent } from './pages/dashboard/admin/admin.component';
 import { PedidoComponent } from './pages/cliente/pedido/pedido.component';
+import { MisPedidosComponent } from './pages/cliente/mis-pedidos/mis-pedidos.component'; // <- nuevo
 import { roleGuard } from './services/role.guard';
 
 export const routes: Routes = [
@@ -19,7 +20,8 @@ export const routes: Routes = [
     children: [
       { path: 'perfil', component: PerfilComponent },
       { path: 'admin', component: AdminComponent },
-      { path: 'pedido', component: PedidoComponent }, // <--- NUEVO
+      { path: 'pedido', component: PedidoComponent },
+      { path: 'mis-pedidos', component: MisPedidosComponent }, // <- NUEVO
       { path: '', redirectTo: 'perfil', pathMatch: 'full' }, // default
     ],
   },

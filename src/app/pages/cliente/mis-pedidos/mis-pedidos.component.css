@@ -1,0 +1,16 @@
+.mis-pedidos-card {
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.full-width-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.no-pedidos {
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+  color: gray;
+}

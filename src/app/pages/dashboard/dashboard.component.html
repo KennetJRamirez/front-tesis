@@ -25,11 +25,6 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
-      <!-- Productos -->
-      <mat-list-item routerLink="/dashboard/productos">
-        <mat-icon>inventory</mat-icon> Productos
-      </mat-list-item>
-
       <!-- Admin -->
       <mat-list-item *ngIf="userRole === 3" routerLink="/dashboard/admin">
         <mat-icon>admin_panel_settings</mat-icon> Administración
@@ -38,6 +33,11 @@
       <!-- Crear Pedido -->
       <mat-list-item *ngIf="userRole === 1" routerLink="/dashboard/pedido">
         <mat-icon>local_shipping</mat-icon> Crear Pedido
+      </mat-list-item>
+
+      <!-- Mis Pedidos (solo cliente) -->
+      <mat-list-item *ngIf="userRole === 1" routerLink="/dashboard/mis-pedidos">
+        <mat-icon>assignment</mat-icon> Mis Pedidos
       </mat-list-item>
 
       <mat-list-item (click)="logout()">
