@@ -1,0 +1,160 @@
+<mat-card class="pedido-card">
+  <h2>Crear Pedido</h2>
+  <mat-horizontal-stepper linear #stepper>
+
+    <!-- Paso 1: Paquete -->
+    <mat-step [stepControl]="paqueteForm">
+      <form [formGroup]="paqueteForm" class="step-form">
+        <ng-template matStepLabel>Paquete</ng-template>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción</mat-label>
+          <input matInput formControlName="descripcion" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Peso (kg)</mat-label>
+          <input matInput type="number" formControlName="peso" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dimensiones (LxAnxAl)</mat-label>
+          <input matInput formControlName="dimensiones" />
+        </mat-form-field>
+
+        <mat-checkbox formControlName="fragil">Frágil</mat-checkbox>
+
+        <div class="stepper-buttons">
+          <button mat-button matStepperNext [disabled]="!paqueteForm.valid">Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 2: Dirección Origen -->
+    <mat-step [stepControl]="origenForm">
+      <form [formGroup]="origenForm" class="step-form">
+        <ng-template matStepLabel>Dirección Origen</ng-template>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Calle Principal</mat-label>
+            <input matInput formControlName="calle_principal" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="numero" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Calle Secundaria</mat-label>
+            <input matInput formControlName="calle_secundaria" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Zona</mat-label>
+            <input matInput formControlName="zona" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Colonia/Barrio</mat-label>
+            <input matInput formControlName="colonia_o_barrio" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Municipio</mat-label>
+            <input matInput formControlName="municipio" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Departamento</mat-label>
+            <input matInput formControlName="departamento" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Código Postal</mat-label>
+            <input matInput formControlName="codigo_postal" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Referencias</mat-label>
+            <input matInput formControlName="referencias" />
+          </mat-form-field>
+        </div>
+
+        <div class="stepper-buttons">
+          <button mat-button matStepperPrevious>Anterior</button>
+          <button mat-button matStepperNext [disabled]="!origenForm.valid">Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 3: Dirección Destino -->
+    <mat-step [stepControl]="destinoForm">
+      <form [formGroup]="destinoForm" class="step-form">
+        <ng-template matStepLabel>Dirección Destino</ng-template>
+        <div class="form-grid">
+          <!-- mismos campos que origen -->
+          <mat-form-field appearance="outline">
+            <mat-label>Calle Principal</mat-label>
+            <input matInput formControlName="calle_principal" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="numero" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Calle Secundaria</mat-label>
+            <input matInput formControlName="calle_secundaria" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Zona</mat-label>
+            <input matInput formControlName="zona" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Colonia/Barrio</mat-label>
+            <input matInput formControlName="colonia_o_barrio" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Municipio</mat-label>
+            <input matInput formControlName="municipio" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Departamento</mat-label>
+            <input matInput formControlName="departamento" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Código Postal</mat-label>
+            <input matInput formControlName="codigo_postal" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Referencias</mat-label>
+            <input matInput formControlName="referencias" />
+          </mat-form-field>
+        </div>
+
+        <div class="stepper-buttons">
+          <button mat-button matStepperPrevious>Anterior</button>
+          <button mat-button matStepperNext [disabled]="!destinoForm.valid">Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 4: Destinatario -->
+    <mat-step [stepControl]="destinatarioForm">
+      <form [formGroup]="destinatarioForm" class="step-form">
+        <ng-template matStepLabel>Destinatario</ng-template>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" />
+        </mat-form-field>
+
+        <div class="stepper-buttons">
+          <button mat-button matStepperPrevious>Anterior</button>
+          <button mat-raised-button color="primary" (click)="enviarPedido()" [disabled]="!destinatarioForm.valid">
+            Crear Pedido
+          </button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+</mat-card>

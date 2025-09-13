@@ -8,6 +8,7 @@
     </mat-toolbar>
 
     <mat-nav-list>
+      <!-- Perfil -->
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -15,22 +16,28 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <mat-list-item (click)="setContent('perfilMiCuenta')">
+          <mat-list-item routerLink="/dashboard/perfil" fragment="miCuenta">
             <mat-icon>account_circle</mat-icon> Mi Cuenta
           </mat-list-item>
-          <mat-list-item (click)="setContent('perfilPassword')">
+          <mat-list-item routerLink="/dashboard/perfil" fragment="cambiarPassword">
             <mat-icon>lock</mat-icon> Cambiar Contraseña
           </mat-list-item>
         </mat-nav-list>
       </mat-expansion-panel>
 
-      <mat-list-item (click)="setContent('productos')">
+      <!-- Productos -->
+      <mat-list-item routerLink="/dashboard/productos">
         <mat-icon>inventory</mat-icon> Productos
       </mat-list-item>
 
-      <!-- Solo mostrar administración si el rol es 3 -->
-      <mat-list-item *ngIf="userRole === 3" (click)="setContent('admin')">
+      <!-- Admin -->
+      <mat-list-item *ngIf="userRole === 3" routerLink="/dashboard/admin">
         <mat-icon>admin_panel_settings</mat-icon> Administración
+      </mat-list-item>
+
+      <!-- Crear Pedido -->
+      <mat-list-item *ngIf="userRole === 1" routerLink="/dashboard/pedido">
+        <mat-icon>local_shipping</mat-icon> Crear Pedido
       </mat-list-item>
 
       <mat-list-item (click)="logout()">
@@ -49,24 +56,8 @@
     </mat-toolbar>
 
     <div class="dashboard-content">
-      <ng-container [ngSwitch]="activeContent">
-        <app-perfil *ngSwitchCase="'perfilMiCuenta'" [showSection]="'miCuenta'" [usuario]="userData"></app-perfil>
-        <app-perfil *ngSwitchCase="'perfilPassword'" [showSection]="'cambiarPassword'"
-          [usuario]="userData"></app-perfil>
-        <mat-card *ngSwitchCase="'productos'" class="dashboard-card">
-          <mat-card-title>Productos</mat-card-title>
-          <mat-card-content>
-            Aquí iría la lista de productos.
-          </mat-card-content>
-        </mat-card>
-        <app-admin *ngSwitchCase="'admin'"></app-admin>
-        <mat-card *ngSwitchDefault class="dashboard-card">
-          <mat-card-title>Dashboard</mat-card-title>
-          <mat-card-content>
-            Selecciona una opción del menú para comenzar.
-          </mat-card-content>
-        </mat-card>
-      </ng-container>
+      <!-- Aquí se cargan las secciones hijas -->
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

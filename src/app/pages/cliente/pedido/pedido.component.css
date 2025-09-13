@@ -1,0 +1,32 @@
+.pedido-card {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* más espacio entre inputs */
+  margin-top: 1rem; /* separación desde el título del stepper */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem; /* más espacio entre campos del grid */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.stepper-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem; /* más espacio antes de los botones */
+}
+
+.fragil-checkbox {
+  margin-top: 1rem; /* separa el checkbox de los inputs */
+}

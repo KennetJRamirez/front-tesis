@@ -35,8 +35,8 @@ export class PerfilComponent implements OnInit {
   @Input() showSection: 'miCuenta' | 'cambiarPassword' = 'miCuenta';
   @Input() usuario: any = null;
 
-  perfilForm!: FormGroup;
-  passwordForm!: FormGroup;
+  perfilForm?: FormGroup;
+  passwordForm?: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +44,21 @@ export class PerfilComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Si el input usuario no llega, lo cargamos
+    if (!this.usuario) {
+      this.usuarioService.getProfile().subscribe({
+        next: (data) => {
+          this.usuario = data;
+          this.initForms();
+        },
+        error: (err) => console.error('Error cargando perfil:', err),
+      });
+    } else {
+      this.initForms();
+    }
+  }
+
+  initForms() {
     this.perfilForm = this.fb.group({
       nombre: [this.usuario?.nombre || '', Validators.required],
       telefono: [this.usuario?.telefono || '', Validators.required],
@@ -60,7 +75,7 @@ export class PerfilComponent implements OnInit {
   }
 
   guardarCambios() {
-    if (this.perfilForm.valid) {
+    if (this.perfilForm?.valid) {
       this.usuarioService.updateProfile(this.perfilForm.value).subscribe({
         next: () => {
           Swal.fire({
@@ -84,7 +99,7 @@ export class PerfilComponent implements OnInit {
   }
 
   cambiarPassword() {
-    if (this.passwordForm.valid) {
+    if (this.passwordForm?.valid) {
       this.usuarioService.changePassword(this.passwordForm.value).subscribe({
         next: () => {
           Swal.fire({
@@ -94,7 +109,7 @@ export class PerfilComponent implements OnInit {
             timer: 2000,
             showConfirmButton: false,
           });
-          this.passwordForm.reset();
+          this.passwordForm?.reset();
         },
         error: (err) => {
           console.error('Error al cambiar contraseña:', err);

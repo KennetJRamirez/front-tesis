@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,10 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioService } from '../../services/usuario.service';
-import { PerfilComponent } from '../perfil/perfil.component';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { AdminComponent } from './admin/admin.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,19 +27,11 @@ import { AdminComponent } from './admin/admin.component';
     MatCardModule,
     MatToolbarModule,
     MatExpansionModule,
-    PerfilComponent,
-    AdminComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
   userRole: number | null = null;
   userData: any = null;
-  activeContent:
-    | 'perfilMiCuenta'
-    | 'perfilPassword'
-    | 'productos'
-    | 'admin'
-    | '' = '';
   sidebarOpened: boolean = true;
   isScreenSmall: boolean = false;
 
@@ -72,12 +61,6 @@ export class DashboardComponent implements OnInit {
   checkScreen() {
     this.isScreenSmall = window.innerWidth < 768;
     this.sidebarOpened = !this.isScreenSmall;
-  }
-
-  setContent(
-    section: 'perfilMiCuenta' | 'perfilPassword' | 'productos' | 'admin' | ''
-  ) {
-    this.activeContent = section;
   }
 
   logout() {
