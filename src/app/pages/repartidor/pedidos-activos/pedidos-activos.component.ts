@@ -2,13 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { RepartidorService } from '../../../services/repartidor.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pedidos-activos',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatGridListModule,
+  ],
   templateUrl: './pedidos-activos.component.html',
   styleUrls: ['./pedidos-activos.component.css'],
 })

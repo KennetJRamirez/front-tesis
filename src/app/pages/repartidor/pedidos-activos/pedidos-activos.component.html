@@ -1,53 +1,61 @@
 <h2 class="titulo">🚚 Pedidos Activos</h2>
 
 <div class="grid-pedidos">
-  <mat-card *ngFor="let pedido of pedidos" class="pedido-card">
+  <mat-card *ngFor="let pedido of pedidos" class="pedido-card mat-elevation-z6">
     <mat-card-header>
+      <div mat-card-avatar class="pedido-avatar">
+        <mat-icon>local_shipping</mat-icon>
+      </div>
       <mat-card-title>Pedido #{{ pedido.id_pedido }}</mat-card-title>
-      <mat-card-subtitle>{{ pedido.estado }}</mat-card-subtitle>
+      <mat-card-subtitle>
+        <mat-chip-set>
+          <mat-chip color="primary" selected>{{ pedido.estado }}</mat-chip>
+        </mat-chip-set>
+      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
-      <p><strong>📦 Paquete:</strong> {{ pedido.paquete.descripcion }}</p>
-      <p><strong>Fragil:</strong> {{ pedido.paquete.fragil ? 'Sí' : 'No' }}</p>
-      <p><strong>Peso:</strong> {{ pedido.paquete.peso }} kg</p>
-      <p><strong>Dimensiones:</strong> {{ pedido.paquete.dimensiones }}</p>
+      <p><mat-icon>inventory_2</mat-icon> <strong>Paquete:</strong> {{ pedido.paquete.descripcion }}</p>
 
-      <hr>
+      <mat-chip-set>
+        <mat-chip color="warn" *ngIf="pedido.paquete.fragil" selected>
+          <mat-icon>warning</mat-icon> Frágil
+        </mat-chip>
+        <mat-chip color="primary" *ngIf="!pedido.paquete.fragil" selected>
+          <mat-icon>check_circle</mat-icon> Normal
+        </mat-chip>
+      </mat-chip-set>
 
-      <p><strong>Origen:</strong>
+      <p><mat-icon>fitness_center</mat-icon> <strong>Peso:</strong> {{ pedido.paquete.peso }} kg</p>
+      <p><mat-icon>straighten</mat-icon> <strong>Dimensiones:</strong> {{ pedido.paquete.dimensiones }}</p>
+
+      <mat-divider></mat-divider>
+
+      <p><mat-icon>home</mat-icon> <strong>Origen:</strong><br>
         {{ pedido.direccion_origen.calle_principal }} {{ pedido.direccion_origen.numero }},
-        {{ pedido.direccion_origen.calle_secundaria }},
-        {{ pedido.direccion_origen.colonia_o_barrio }},
-        Zona {{ pedido.direccion_origen.zona }},
-        {{ pedido.direccion_origen.municipio }},
-        {{ pedido.direccion_origen.departamento }},
-        C.P. {{ pedido.direccion_origen.codigo_postal }}
+        {{ pedido.direccion_origen.colonia_o_barrio }}, Zona {{ pedido.direccion_origen.zona }},
+        {{ pedido.direccion_origen.municipio }}, {{ pedido.direccion_origen.departamento }}
       </p>
 
-      <p><strong>Destino:</strong>
+      <p><mat-icon>location_on</mat-icon> <strong>Destino:</strong><br>
         {{ pedido.direccion_destino.calle_principal }} {{ pedido.direccion_destino.numero }},
-        {{ pedido.direccion_destino.calle_secundaria }},
-        {{ pedido.direccion_destino.colonia_o_barrio }},
-        Zona {{ pedido.direccion_destino.zona }},
-        {{ pedido.direccion_destino.municipio }},
-        {{ pedido.direccion_destino.departamento }},
-        C.P. {{ pedido.direccion_destino.codigo_postal }}
+        {{ pedido.direccion_destino.colonia_o_barrio }}, Zona {{ pedido.direccion_destino.zona }},
+        {{ pedido.direccion_destino.municipio }}, {{ pedido.direccion_destino.departamento }}
       </p>
 
-      <hr>
+      <mat-divider></mat-divider>
 
-      <p><strong>Cliente:</strong> {{ pedido.destinatario.nombre }}</p>
-      <p><strong>Teléfono:</strong> {{ pedido.destinatario.telefono }}</p>
-      <p><strong>Email:</strong> {{ pedido.destinatario.email }}</p>
+      <p><mat-icon>person</mat-icon> <strong>Cliente:</strong> {{ pedido.destinatario.nombre }}</p>
+      <p><mat-icon>phone</mat-icon> <strong>Tel:</strong> {{ pedido.destinatario.telefono }}</p>
+      <p><mat-icon>email</mat-icon> <strong>Email:</strong> {{ pedido.destinatario.email }}</p>
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-raised-button color="accent" (click)="marcarRecolectado(pedido.id_envio)">
-        Recolectado
+      <button mat-stroked-button color="accent" (click)="marcarRecolectado(pedido.id_envio)">
+        <mat-icon>check</mat-icon> Recolectado
       </button>
       <button mat-raised-button color="warn" (click)="marcarEntregado(pedido.id_envio)">
-        Entregado
+        <mat-icon>done_all</mat-icon> Entregado
       </button>
     </mat-card-actions>
   </mat-card>
