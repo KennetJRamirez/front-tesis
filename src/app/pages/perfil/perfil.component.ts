@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UsuarioService } from '../../services/usuario.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -37,13 +38,24 @@ export class PerfilComponent implements OnInit {
 
   perfilForm?: FormGroup;
   passwordForm?: FormGroup;
+  hideCurrent = true;
+  hideNew = true;
+  hideConfirm = true;
 
   constructor(
     private fb: FormBuilder,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    // Leer fragment y actualizar showSection
+    this.route.fragment.subscribe((fragment) => {
+      if (fragment === 'miCuenta' || fragment === 'cambiarPassword') {
+        this.showSection = fragment;
+      }
+    });
+
     // Si el input usuario no llega, lo cargamos
     if (!this.usuario) {
       this.usuarioService.getProfile().subscribe({
@@ -68,10 +80,21 @@ export class PerfilComponent implements OnInit {
       ],
     });
 
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmNewPassword: ['', Validators.required],
+      },
+      { validators: this.passwordsMatch }
+    );
+  }
+
+  // Validator para que nuevas contraseñas coincidan
+  passwordsMatch(group: FormGroup) {
+    const newPass = group.get('newPassword')?.value;
+    const confirmPass = group.get('confirmNewPassword')?.value;
+    return newPass === confirmPass ? null : { notMatching: true };
   }
 
   guardarCambios() {
@@ -100,25 +123,34 @@ export class PerfilComponent implements OnInit {
 
   cambiarPassword() {
     if (this.passwordForm?.valid) {
-      this.usuarioService.changePassword(this.passwordForm.value).subscribe({
-        next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Contraseña cambiada',
-            text: 'Tu nueva contraseña ha sido guardada correctamente',
-            timer: 2000,
-            showConfirmButton: false,
-          });
-          this.passwordForm?.reset();
-        },
-        error: (err) => {
-          console.error('Error al cambiar contraseña:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo cambiar la contraseña',
-          });
-        },
+      const { currentPassword, newPassword } = this.passwordForm.value;
+      this.usuarioService
+        .changePassword({ currentPassword, newPassword })
+        .subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Contraseña cambiada',
+              text: 'Tu nueva contraseña ha sido guardada correctamente',
+              timer: 2000,
+              showConfirmButton: false,
+            });
+            this.passwordForm?.reset();
+          },
+          error: (err) => {
+            console.error('Error al cambiar contraseña:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cambiar la contraseña',
+            });
+          },
+        });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Verifica que las contraseñas coincidan y cumplan con los requisitos',
       });
     }
   }

@@ -52,18 +52,40 @@
 
     <mat-card-content>
       <form [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()" class="perfil-form">
+
+        <!-- Contraseña Actual -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña Actual</mat-label>
           <mat-icon matPrefix>vpn_key</mat-icon>
-          <input matInput type="password" formControlName="currentPassword" />
+          <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword" />
+          <button mat-icon-button matSuffix type="button" (click)="hideCurrent = !hideCurrent">
+            <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
           <mat-error *ngIf="passwordForm.get('currentPassword')?.invalid">Contraseña requerida</mat-error>
         </mat-form-field>
 
+        <!-- Nueva Contraseña -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nueva Contraseña</mat-label>
           <mat-icon matPrefix>lock</mat-icon>
-          <input matInput type="password" formControlName="newPassword" />
+          <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPassword" />
+          <button mat-icon-button matSuffix type="button" (click)="hideNew = !hideNew">
+            <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
           <mat-error *ngIf="passwordForm.get('newPassword')?.invalid">Mínimo 6 caracteres</mat-error>
+        </mat-form-field>
+
+        <!-- Confirmar Nueva Contraseña -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmar Nueva Contraseña</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput [type]="hideConfirm ? 'password' : 'text'" formControlName="confirmNewPassword" />
+          <button mat-icon-button matSuffix type="button" (click)="hideConfirm = !hideConfirm">
+            <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.hasError('notMatching') && passwordForm.get('confirmNewPassword')?.touched">
+            Las contraseñas no coinciden
+          </mat-error>
         </mat-form-field>
 
         <div class="perfil-actions">
