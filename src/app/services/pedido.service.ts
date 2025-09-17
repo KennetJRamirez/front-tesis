@@ -11,6 +11,9 @@ import { Pedido } from '../pages/cliente/mis-pedidos/mis-pedidos.component';
   providedIn: 'root',
 })
 export class PedidoService {
+  getPedidosActivos() {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}

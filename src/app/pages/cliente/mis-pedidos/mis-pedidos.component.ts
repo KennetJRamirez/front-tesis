@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { PedidoService } from '../../../services/pedido.service';
 import Swal from 'sweetalert2';
-
+import { PedidoService } from '../../../services/pedido.service';
 export interface Pedido {
   id_pedido: number;
   id_envio: number;

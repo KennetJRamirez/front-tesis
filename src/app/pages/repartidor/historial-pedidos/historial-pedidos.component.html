@@ -1,0 +1,76 @@
+<h2>📜 Historial de Pedidos</h2>
+
+<!-- 🔍 Buscador -->
+<mat-form-field appearance="outline" style="width: 100%; margin-bottom: 1rem;">
+  <mat-label>Buscar</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar pedidos..." />
+</mat-form-field>
+
+<!-- 📋 Tabla con sort y paginator -->
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+  <!-- ID -->
+  <ng-container matColumnDef="id_envio">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-icon inline>confirmation_number</mat-icon> ID
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.id_envio }}</td>
+  </ng-container>
+
+  <!-- Paquete -->
+  <ng-container matColumnDef="paquete">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-icon inline>inventory_2</mat-icon> Paquete
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.paquete }}</td>
+  </ng-container>
+
+  <!-- Frágil -->
+  <ng-container matColumnDef="fragil">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-icon inline>priority_high</mat-icon> Frágil
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-chip-set>
+        <mat-chip color="warn" *ngIf="row.fragil" selected>
+          <mat-icon>warning</mat-icon> Frágil
+        </mat-chip>
+        <mat-chip color="primary" *ngIf="!row.fragil" selected>
+          <mat-icon>inventory</mat-icon> Normal
+        </mat-chip>
+      </mat-chip-set>
+
+    </td>
+  </ng-container>
+
+  <!-- Origen -->
+  <ng-container matColumnDef="origen">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-icon inline>home</mat-icon> Origen
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.origen }}</td>
+  </ng-container>
+
+  <!-- Destino -->
+  <ng-container matColumnDef="destino">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-icon inline>location_on</mat-icon> Destino
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.destino }}</td>
+  </ng-container>
+
+  <!-- Fecha -->
+  <ng-container matColumnDef="fecha">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-icon inline>event</mat-icon> Fecha
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.fecha_asignacion | date:'short' }}</td>
+  </ng-container>
+
+  <!-- Filas -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<!-- 📌 Paginación -->
+<mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>

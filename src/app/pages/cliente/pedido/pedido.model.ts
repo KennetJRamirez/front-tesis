@@ -39,3 +39,18 @@ export interface PedidoResponse {
   costo: number;
   km_destino: number;
 }
+
+// Repartidor
+export interface Pedido {
+  id_pedido: number;
+  id_envio: number;
+  estado: string;
+  costo: number;
+  fecha_asignacion: string;
+
+  paquete: Paquete;
+  direccion_origen: Direccion;
+  direccion_destino: Direccion;
+  destinatario: Destinatario;
+}
+

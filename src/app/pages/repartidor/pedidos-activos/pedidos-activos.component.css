@@ -1,0 +1,22 @@
+.titulo {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.grid-pedidos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.pedido-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.pedido-card:hover {
+  transform: translateY(-4px);
+}

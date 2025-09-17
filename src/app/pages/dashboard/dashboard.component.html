@@ -40,6 +40,16 @@
         <mat-icon>assignment</mat-icon> Mis Pedidos
       </mat-list-item>
 
+      <!-- Pedidos Activos (repartidor) -->
+      <mat-list-item *ngIf="userRole === 2" routerLink="/dashboard/pedidos-activos">
+        <mat-icon>assignment_turned_in</mat-icon> Pedidos Activos
+      </mat-list-item>
+
+      <!-- Historial (repartidor) -->
+      <mat-list-item *ngIf="userRole === 2" routerLink="/dashboard/historial-pedidos">
+        <mat-icon>history</mat-icon> Historial
+      </mat-list-item>
+
       <mat-list-item (click)="logout()">
         <mat-icon>logout</mat-icon> Cerrar Sesión
       </mat-list-item>

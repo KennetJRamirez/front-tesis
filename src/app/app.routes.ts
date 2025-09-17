@@ -7,6 +7,8 @@ import { AdminComponent } from './pages/dashboard/admin/admin.component';
 import { PedidoComponent } from './pages/cliente/pedido/pedido.component';
 import { MisPedidosComponent } from './pages/cliente/mis-pedidos/mis-pedidos.component'; // <- nuevo
 import { roleGuard } from './services/role.guard';
+import { PedidosActivosComponent } from './pages/repartidor/pedidos-activos/pedidos-activos.component';
+import { HistorialPedidosComponent } from './pages/repartidor/historial-pedidos/historial-pedidos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,6 +25,8 @@ export const routes: Routes = [
       { path: 'pedido', component: PedidoComponent },
       { path: 'mis-pedidos', component: MisPedidosComponent }, // <- NUEVO
       { path: '', redirectTo: 'perfil', pathMatch: 'full' }, // default
+      { path: 'pedidos-activos', component: PedidosActivosComponent }, // repartidor
+      { path: 'historial-pedidos', component: HistorialPedidosComponent }, // repartidor
     ],
   },
   { path: '**', redirectTo: 'login' },
