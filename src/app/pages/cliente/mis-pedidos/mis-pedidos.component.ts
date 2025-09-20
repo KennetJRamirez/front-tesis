@@ -4,7 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
+
 export interface Pedido {
   id_pedido: number;
   id_envio: number;
@@ -33,9 +35,10 @@ export class MisPedidosComponent implements OnInit {
     'estado',
     'costo',
     'fecha_asignacion',
+    'seguimiento',
   ];
 
-  constructor(private pedidoService: PedidoService) {}
+  constructor(private pedidoService: PedidoService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarPedidos();
@@ -52,7 +55,7 @@ export class MisPedidosComponent implements OnInit {
       next: (res) => {
         this.pedidos = res;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         Swal.fire(
           'Error',
@@ -61,5 +64,9 @@ export class MisPedidosComponent implements OnInit {
         );
       },
     });
+  }
+
+  verSeguimiento(id_envio: number) {
+    this.router.navigate([`/dashboard/seguimiento/${id_envio}`]);
   }
 }

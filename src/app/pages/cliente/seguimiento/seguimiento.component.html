@@ -1,0 +1,11 @@
+<h2>Seguimiento del pedido #{{ id_envio }}</h2>
+
+<div *ngIf="position; else noPos">
+  <p><b>Latitud:</b> {{ position.latitud }}</p>
+  <p><b>Longitud:</b> {{ position.longitud }}</p>
+  <p><b>Fecha:</b> {{ position.fecha_hora }}</p>
+</div>
+
+<ng-template #noPos>
+  <p>No hay posiciones registradas aún.</p>
+</ng-template>

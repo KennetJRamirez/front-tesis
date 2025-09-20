@@ -1,0 +1,14 @@
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+/* 👇 esto fuerza a usar los íconos desde assets */
+.leaflet-default-icon-path {
+  background-image: url("/assets/leaflet/images/marker-icon.png");
+}

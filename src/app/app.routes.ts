@@ -5,10 +5,11 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { AdminComponent } from './pages/dashboard/admin/admin.component';
 import { PedidoComponent } from './pages/cliente/pedido/pedido.component';
-import { MisPedidosComponent } from './pages/cliente/mis-pedidos/mis-pedidos.component'; // <- nuevo
+import { MisPedidosComponent } from './pages/cliente/mis-pedidos/mis-pedidos.component';
 import { roleGuard } from './services/role.guard';
 import { PedidosActivosComponent } from './pages/repartidor/pedidos-activos/pedidos-activos.component';
 import { HistorialPedidosComponent } from './pages/repartidor/historial-pedidos/historial-pedidos.component';
+import { SeguimientoComponent } from './pages/repartidor/seguimiento/seguimiento.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,10 +24,11 @@ export const routes: Routes = [
       { path: 'perfil', component: PerfilComponent },
       { path: 'admin', component: AdminComponent },
       { path: 'pedido', component: PedidoComponent },
-      { path: 'mis-pedidos', component: MisPedidosComponent }, // <- NUEVO
-      { path: '', redirectTo: 'perfil', pathMatch: 'full' }, // default
-      { path: 'pedidos-activos', component: PedidosActivosComponent }, // repartidor
-      { path: 'historial-pedidos', component: HistorialPedidosComponent }, // repartidor
+      { path: 'mis-pedidos', component: MisPedidosComponent },
+      { path: 'pedidos-activos', component: PedidosActivosComponent },
+      { path: 'historial-pedidos', component: HistorialPedidosComponent },
+      { path: 'seguimiento/:id_envio', component: SeguimientoComponent }, // 👈 aquí vive seguimiento
+      { path: '', redirectTo: 'perfil', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: 'login' },

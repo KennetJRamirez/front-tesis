@@ -79,9 +79,24 @@ export class PedidosActivosComponent implements OnInit {
     this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
       Swal.fire('Éxito', 'Pedido marcado como recolectado ✅', 'success');
       this.cargarPedidos();
+
+      // ⏩ Activar tracking en tiempo real
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (pos) => {
+            const { latitude, longitude } = pos.coords;
+            this.repartidorService
+              .savePosition(id_envio, latitude, longitude)
+              .subscribe();
+          },
+          (err) => console.error('Error en geolocalización:', err),
+          { enableHighAccuracy: true, maximumAge: 0 }
+        );
+      } else {
+        console.error('Geolocalización no soportada');
+      }
     });
   }
-
   marcarEntregado(id_envio: number) {
     this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
       Swal.fire('Éxito', 'Pedido marcado como entregado 🎉', 'success');

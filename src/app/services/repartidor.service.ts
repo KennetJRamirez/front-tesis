@@ -6,45 +6,56 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RepartidorService {
-  private apiUrl = 'http://localhost:3000/repartidor'; // 👈 base del backend
+  private apiUrl = 'http://localhost:3000/repartidor';
 
   constructor(private http: HttpClient) {}
 
-  // 📌 Perfil repartidor
+  // Perfil repartidor
   getProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/me`);
   }
-
   updateProfile(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/me`, data);
   }
-
   changePassword(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/me/password`, data);
   }
 
-  // 📦 Pedidos activos
+  // Pedidos activos
   getPedidosActivos(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/pedidos/activos`);
   }
 
-  // 📜 Historial de pedidos
+  // Historial de pedidos
   getHistorialPedidos(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/pedidos/historial`);
   }
 
-  // 🔍 Detalle de un pedido específico
+  // Detalle de un pedido
   getPedidoDetalle(id_envio: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/pedidos/${id_envio}`);
   }
 
-  // ✅ Marcar como recolectado
+  // Marcar como recolectado
   marcarRecolectado(id_envio: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/pedidos/${id_envio}/recolectado`, {});
   }
 
-  // ✅ Marcar como entregado
+  // Marcar como entregado
   marcarEntregado(id_envio: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/pedidos/${id_envio}/entregado`, {});
+  }
+
+  // Guardar posición del repartidor
+  savePosition(id_envio: number, lat: number, lng: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/tracking/${id_envio}`, {
+      latitud: lat,
+      longitud: lng,
+    });
+  }
+
+  // 🔍 Obtener última posición de un envío
+  getLastPosition(id_envio: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/tracking/${id_envio}`);
   }
 }
