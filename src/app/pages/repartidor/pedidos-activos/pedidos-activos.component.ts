@@ -99,7 +99,7 @@ export class PedidosActivosComponent implements OnInit {
   }
   marcarEntregado(id_envio: number) {
     this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
-      Swal.fire('Éxito', 'Pedido marcado como entregado 🎉', 'success');
+      Swal.fire('Éxito', 'Pedido marcado como entregado', 'success');
       this.cargarPedidos();
     });
   }

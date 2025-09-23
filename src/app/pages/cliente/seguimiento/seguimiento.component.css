@@ -1,14 +1,49 @@
-.leaflet-container {
-  height: 100%;
+/* Tarjeta principal */
+.seguimiento-card {
+  max-width: 900px;
+  margin: 20px auto;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Contenedor del mapa */
+.map-container {
   width: 100%;
+  height: 500px; /* 🔥 un poco más grande para ver bien el punto */
+  border-radius: 12px;
+  margin: 20px 0;
+  overflow: hidden;
 }
 
-.leaflet-div-icon {
-  background: transparent;
-  border: none;
+/* Para que el canvas de Mapbox herede bordes redondeados */
+.mapboxgl-canvas {
+  border-radius: 12px;
 }
 
-/* 👇 esto fuerza a usar los íconos desde assets */
-.leaflet-default-icon-path {
-  background-image: url("/assets/leaflet/images/marker-icon.png");
+/* Botón de actualizar */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.button-container button {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Info de la posición */
+.position-info {
+  margin-top: 15px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 15px;
+  color: #444;
+}
+
+.position-info p {
+  margin: 4px 0;
 }

@@ -9,7 +9,7 @@ import { MisPedidosComponent } from './pages/cliente/mis-pedidos/mis-pedidos.com
 import { roleGuard } from './services/role.guard';
 import { PedidosActivosComponent } from './pages/repartidor/pedidos-activos/pedidos-activos.component';
 import { HistorialPedidosComponent } from './pages/repartidor/historial-pedidos/historial-pedidos.component';
-import { SeguimientoComponent } from './pages/repartidor/seguimiento/seguimiento.component';
+import { SeguimientoComponent } from './pages/cliente/seguimiento/seguimiento.component'; //
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

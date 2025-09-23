@@ -1,11 +1,33 @@
-<h2>Seguimiento del pedido #{{ id_envio }}</h2>
+<mat-card class="seguimiento-card">
+  <mat-card-header>
+    <mat-card-title>Seguimiento del pedido #{{ id_envio }}</mat-card-title>
+    <mat-card-subtitle *ngIf="position">
+      Última actualización: {{ position.fecha_hora | date:'short' }}
+    </mat-card-subtitle>
+  </mat-card-header>
 
-<div *ngIf="position; else noPos">
-  <p><b>Latitud:</b> {{ position.latitud }}</p>
-  <p><b>Longitud:</b> {{ position.longitud }}</p>
-  <p><b>Fecha:</b> {{ position.fecha_hora }}</p>
-</div>
+  <mat-card-content>
+    <div *ngIf="position; else noPos">
+      <div class="button-container">
+        <button mat-raised-button color="primary" (click)="actualizarPosicion()">
+          <mat-icon>refresh</mat-icon> Actualizar ahora
+        </button>
+      </div>
 
-<ng-template #noPos>
-  <p>No hay posiciones registradas aún.</p>
-</ng-template>
+      <!-- Mapa -->
+      <div #mapContainer class="map-container"></div>
+
+      <!-- Info coordenadas -->
+      <div class="position-info">
+        <p><b>Latitud:</b> {{ position.latitud }}</p>
+        <p><b>Longitud:</b> {{ position.longitud }}</p>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <ng-template #noPos>
+    <mat-card-content>
+      <p>No hay posiciones registradas aún.</p>
+    </mat-card-content>
+  </ng-template>
+</mat-card>
