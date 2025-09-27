@@ -1,0 +1,39 @@
+<div style="max-width: 1200px; margin: 2rem auto; display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+
+  <!-- Pedidos por estado -->
+  <mat-card>
+    <h3>Pedidos por estado</h3>
+    <canvas baseChart
+            [data]="pedidosEstadoData"
+            [type]="'pie'">
+    </canvas>
+  </mat-card>
+
+  <!-- Ingresos por día -->
+  <mat-card>
+    <h3>Ingresos por día</h3>
+    <canvas baseChart
+            [data]="ingresosData"
+            [type]="'line'">
+    </canvas>
+  </mat-card>
+
+  <!-- Pedidos por zona -->
+  <mat-card>
+    <h3>Pedidos por zona</h3>
+    <canvas baseChart
+            [data]="pedidosZonaData"
+            [type]="'bar'">
+    </canvas>
+  </mat-card>
+
+  <!-- Entregas por repartidor -->
+  <mat-card>
+    <h3>Entregas por repartidor</h3>
+    <canvas baseChart
+            [data]="entregasData"
+            [type]="'bar'">
+    </canvas>
+  </mat-card>
+
+</div>

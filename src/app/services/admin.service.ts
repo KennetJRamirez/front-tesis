@@ -20,12 +20,11 @@ export class AdminService {
     };
   }
 
-  // Ver todos los usuarios
+  // ---- Usuarios ----
   getAllUsers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/usuarios`, this.getAuthHeaders());
   }
 
-  // Ver usuario por ID
   getUserById(id: number): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/usuarios/${id}`,
@@ -33,7 +32,6 @@ export class AdminService {
     );
   }
 
-  // Cambiar rol de usuario
   changeUserRole(id: number, id_rol: number): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/usuarios/${id}/rol`,
@@ -42,11 +40,39 @@ export class AdminService {
     );
   }
 
-  // Cambiar estado activo/inactivo
   changeUserState(id: number, activo: boolean): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/usuarios/${id}/estado`,
       { activo },
+      this.getAuthHeaders()
+    );
+  }
+
+  // ---- Reportes ----
+  getPedidosPorEstado(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/reportes/pedidos-estado`,
+      this.getAuthHeaders()
+    );
+  }
+
+  getIngresosPorDia(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/reportes/ingresos-dia`,
+      this.getAuthHeaders()
+    );
+  }
+
+  getPedidosPorZona(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/reportes/pedidos-zona`,
+      this.getAuthHeaders()
+    );
+  }
+
+  getEntregasPorRepartidor(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/reportes/entregas-repartidor`,
       this.getAuthHeaders()
     );
   }

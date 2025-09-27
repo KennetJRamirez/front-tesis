@@ -77,10 +77,10 @@ export class PedidosActivosComponent implements OnInit {
 
   marcarRecolectado(id_envio: number) {
     this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
-      Swal.fire('Éxito', 'Pedido marcado como recolectado ✅', 'success');
+      Swal.fire('Éxito', 'Pedido marcado como recolectado ', 'success');
       this.cargarPedidos();
 
-      // ⏩ Activar tracking en tiempo real
+      //  Activar tracking en tiempo real
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
           (pos) => {

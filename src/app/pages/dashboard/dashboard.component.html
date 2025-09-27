@@ -44,6 +44,12 @@
       <mat-list-item *ngIf="userRole === 2" routerLink="/dashboard/pedidos-activos">
         <mat-icon>assignment_turned_in</mat-icon> Pedidos Activos
       </mat-list-item>
+      
+      
+      <!-- Reportes (solo admin) -->
+	  <mat-list-item *ngIf="userRole === 3" routerLink="/dashboard/admin-reportes">
+		<mat-icon>bar_chart</mat-icon> Reportes
+	  </mat-list-item>
 
       <!-- Historial (repartidor) -->
       <mat-list-item *ngIf="userRole === 2" routerLink="/dashboard/historial-pedidos">
