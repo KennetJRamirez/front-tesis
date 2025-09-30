@@ -26,6 +26,8 @@ import Swal from 'sweetalert2';
 })
 export class PedidosActivosComponent implements OnInit {
   pedidos: any[] = [];
+  trackingId: number | null = null;   // para watchPosition
+  trackingInterval: any = null;       // fallback con setInterval
 
   constructor(private repartidorService: RepartidorService) {}
 
@@ -75,32 +77,79 @@ export class PedidosActivosComponent implements OnInit {
     });
   }
 
-  marcarRecolectado(id_envio: number) {
-    this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
-      Swal.fire('Éxito', 'Pedido marcado como recolectado ', 'success');
-      this.cargarPedidos();
+  // ===================== TRACKING =====================
 
-      //  Activar tracking en tiempo real
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(
-          (pos) => {
-            const { latitude, longitude } = pos.coords;
-            this.repartidorService
-              .savePosition(id_envio, latitude, longitude)
-              .subscribe();
-          },
-          (err) => console.error('Error en geolocalización:', err),
-          { enableHighAccuracy: true, maximumAge: 0 }
-        );
-      } else {
-        console.error('Geolocalización no soportada');
-      }
-    });
+  startTracking(id_envio: number) {
+    if (!navigator.geolocation) {
+      console.error('Geolocalización no soportada');
+      return;
+    }
+
+    // watchPosition (cambios inmediatos)
+    this.trackingId = navigator.geolocation.watchPosition(
+      (pos) => {
+        this.repartidorService.savePosition(id_envio, pos.coords.latitude, pos.coords.longitude).subscribe();
+      },
+      (err) => console.error('Error en geolocalización:', err),
+      { enableHighAccuracy: true, maximumAge: 0 }
+    );
+
+    // Fallback cada 30s (por si watchPosition no actualiza)
+    this.trackingInterval = setInterval(() => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.repartidorService.savePosition(id_envio, pos.coords.latitude, pos.coords.longitude).subscribe();
+        },
+        (err) => console.error('Error en geolocalización (interval):', err),
+        { enableHighAccuracy: true }
+      );
+    }, 30000);
+
+    console.log('✅ Tracking iniciado');
   }
-  marcarEntregado(id_envio: number) {
-    this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
-      Swal.fire('Éxito', 'Pedido marcado como entregado', 'success');
-      this.cargarPedidos();
-    });
+
+  stopTracking() {
+    if (this.trackingId !== null) {
+      navigator.geolocation.clearWatch(this.trackingId);
+      this.trackingId = null;
+    }
+    if (this.trackingInterval) {
+      clearInterval(this.trackingInterval);
+      this.trackingInterval = null;
+    }
+    console.log('🛑 Tracking detenido');
   }
+
+  // ===================== ESTADOS =====================
+iniciarRecoleccion(id_envio: number) {
+  this.repartidorService.iniciarRecoleccion(id_envio).subscribe(() => {
+    this.startTracking(id_envio);
+    Swal.fire('Tracking', 'Se inició la recolección y se notificó al cliente.', 'info');
+    this.cargarPedidos();
+  });
+}
+
+marcarRecolectado(id_envio: number) {
+  this.stopTracking();
+  this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
+    Swal.fire('Éxito', 'Pedido marcado como Recolectado', 'success');
+    this.cargarPedidos();
+  });
+}
+
+iniciarEntrega(id_envio: number) {
+  this.repartidorService.iniciarEntrega(id_envio).subscribe(() => {
+    this.startTracking(id_envio);
+    Swal.fire('Tracking', 'Se inició la entrega y se notificó al destinatario.', 'info');
+    this.cargarPedidos();
+  });
+}
+
+marcarEntregado(id_envio: number) {
+  this.stopTracking();
+  this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
+    Swal.fire('Éxito', 'Pedido marcado como Entregado', 'success');
+    this.cargarPedidos();
+  });
+}
 }

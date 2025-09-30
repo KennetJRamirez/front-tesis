@@ -54,8 +54,19 @@ export class RepartidorService {
     });
   }
 
-  // 🔍 Obtener última posición de un envío
+  //  Obtener última posición de un envío
   getLastPosition(id_envio: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/tracking/${id_envio}`);
   }
+  
+  // Iniciar Recolecion
+  iniciarRecoleccion(id_envio: number): Observable<any> {
+  return this.http.put(`${this.apiUrl}/pedidos/${id_envio}/iniciar-recoleccion`, {});
+}
+
+	// Inidicar entrega
+iniciarEntrega(id_envio: number): Observable<any> {
+  return this.http.put(`${this.apiUrl}/pedidos/${id_envio}/iniciar-entrega`, {});
+}
+
 }

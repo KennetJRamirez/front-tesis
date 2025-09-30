@@ -16,16 +16,6 @@
 
     <mat-card-content>
       <p><mat-icon>inventory_2</mat-icon> <strong>Paquete:</strong> {{ pedido.paquete.descripcion }}</p>
-
-      <mat-chip-set>
-        <mat-chip color="warn" *ngIf="pedido.paquete.fragil" selected>
-          <mat-icon>warning</mat-icon> Frágil
-        </mat-chip>
-        <mat-chip color="primary" *ngIf="!pedido.paquete.fragil" selected>
-          <mat-icon>check_circle</mat-icon> Normal
-        </mat-chip>
-      </mat-chip-set>
-
       <p><mat-icon>fitness_center</mat-icon> <strong>Peso:</strong> {{ pedido.paquete.peso }} kg</p>
       <p><mat-icon>straighten</mat-icon> <strong>Dimensiones:</strong> {{ pedido.paquete.dimensiones }}</p>
 
@@ -33,27 +23,29 @@
 
       <p><mat-icon>home</mat-icon> <strong>Origen:</strong><br>
         {{ pedido.direccion_origen.calle_principal }} {{ pedido.direccion_origen.numero }},
-        {{ pedido.direccion_origen.colonia_o_barrio }}, Zona {{ pedido.direccion_origen.zona }},
-        {{ pedido.direccion_origen.municipio }}, {{ pedido.direccion_origen.departamento }}
+        {{ pedido.direccion_origen.colonia_o_barrio }}, Zona {{ pedido.direccion_origen.zona }}
       </p>
 
       <p><mat-icon>location_on</mat-icon> <strong>Destino:</strong><br>
         {{ pedido.direccion_destino.calle_principal }} {{ pedido.direccion_destino.numero }},
-        {{ pedido.direccion_destino.colonia_o_barrio }}, Zona {{ pedido.direccion_destino.zona }},
-        {{ pedido.direccion_destino.municipio }}, {{ pedido.direccion_destino.departamento }}
+        {{ pedido.direccion_destino.colonia_o_barrio }}, Zona {{ pedido.direccion_destino.zona }}
       </p>
-
-      <mat-divider></mat-divider>
-
-      <p><mat-icon>person</mat-icon> <strong>Cliente:</strong> {{ pedido.destinatario.nombre }}</p>
-      <p><mat-icon>phone</mat-icon> <strong>Tel:</strong> {{ pedido.destinatario.telefono }}</p>
-      <p><mat-icon>email</mat-icon> <strong>Email:</strong> {{ pedido.destinatario.email }}</p>
     </mat-card-content>
 
     <mat-card-actions align="end">
+      <!-- Flujo de botones -->
+      <button mat-stroked-button color="primary" (click)="iniciarRecoleccion(pedido.id_envio)">
+        <mat-icon>my_location</mat-icon> Iniciar Recolección
+      </button>
+
       <button mat-stroked-button color="accent" (click)="marcarRecolectado(pedido.id_envio)">
         <mat-icon>check</mat-icon> Recolectado
       </button>
+
+      <button mat-raised-button color="primary" (click)="iniciarEntrega(pedido.id_envio)">
+        <mat-icon>my_location</mat-icon> Iniciar Entrega
+      </button>
+
       <button mat-raised-button color="warn" (click)="marcarEntregado(pedido.id_envio)">
         <mat-icon>done_all</mat-icon> Entregado
       </button>
