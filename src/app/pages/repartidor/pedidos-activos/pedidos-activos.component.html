@@ -15,21 +15,31 @@
     </mat-card-header>
 
     <mat-card-content>
+      <!-- Info del paquete -->
       <p><mat-icon>inventory_2</mat-icon> <strong>Paquete:</strong> {{ pedido.paquete.descripcion }}</p>
       <p><mat-icon>fitness_center</mat-icon> <strong>Peso:</strong> {{ pedido.paquete.peso }} kg</p>
       <p><mat-icon>straighten</mat-icon> <strong>Dimensiones:</strong> {{ pedido.paquete.dimensiones }}</p>
 
       <mat-divider></mat-divider>
 
+      <!-- Origen -->
       <p><mat-icon>home</mat-icon> <strong>Origen:</strong><br>
         {{ pedido.direccion_origen.calle_principal }} {{ pedido.direccion_origen.numero }},
         {{ pedido.direccion_origen.colonia_o_barrio }}, Zona {{ pedido.direccion_origen.zona }}
       </p>
 
+      <!-- Destino -->
       <p><mat-icon>location_on</mat-icon> <strong>Destino:</strong><br>
         {{ pedido.direccion_destino.calle_principal }} {{ pedido.direccion_destino.numero }},
         {{ pedido.direccion_destino.colonia_o_barrio }}, Zona {{ pedido.direccion_destino.zona }}
       </p>
+
+      <mat-divider></mat-divider>
+
+      <!-- Destinatario -->
+      <p><mat-icon>person</mat-icon> <strong>Destinatario:</strong> {{ pedido.destinatario.nombre }}</p>
+      <p><mat-icon>phone</mat-icon> <strong>Teléfono:</strong> {{ pedido.destinatario.telefono }}</p>
+      <p><mat-icon>email</mat-icon> <strong>Email:</strong> {{ pedido.destinatario.email }}</p>
     </mat-card-content>
 
     <mat-card-actions align="end">
