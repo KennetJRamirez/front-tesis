@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RepartidorService {
-  private apiUrl = 'http://localhost:3000/repartidor';
+  private apiUrl = `${environment.apiUrl}/repartidor`;
+  //private apiUrl = 'http://localhost:3000/repartidor';
 
   constructor(private http: HttpClient) {}
 

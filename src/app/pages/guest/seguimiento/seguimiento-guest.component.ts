@@ -15,6 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ClienteService } from '../../../services/cliente.service';
 
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-seguimiento-guest',
   standalone: true,
@@ -36,7 +38,7 @@ export class SeguimientoGuestComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // 🔑 aquí recogemos el token desde la URL
+    // Recogemos el token desde la URL
     this.token = this.route.snapshot.paramMap.get('token') || '';
   }
 
@@ -57,7 +59,7 @@ export class SeguimientoGuestComponent implements OnInit, AfterViewInit {
         const lng = Number(pos.longitud);
 
         if (isNaN(lat) || isNaN(lng)) {
-          console.error('❌ Coordenadas inválidas:', pos);
+          console.error('Coordenadas inválidas:', pos);
           return;
         }
 
@@ -78,7 +80,7 @@ export class SeguimientoGuestComponent implements OnInit, AfterViewInit {
     }
 
     this.map = new mapboxgl.Map({
-      accessToken: 'pk.eyJ1Ijoia2pvYWJodWIiLCJhIjoiY21jdTJtaWJvMDI0YzJrcHFqNG8xZjVxMyJ9.BXNOufhvWWSIdcWkgN-I-g',
+      accessToken: environment.mapboxToken,
       container: this.mapContainer.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [lng, lat],

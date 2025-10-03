@@ -27,6 +27,11 @@ interface User {
   activo: boolean;
 }
 
+interface Zona {
+  municipio: string;
+  zona: number;
+}
+
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -148,6 +153,128 @@ export class AdminComponent implements OnInit, AfterViewInit {
       error: () => Swal.fire('Error', 'No se pudo cambiar el rol', 'error'),
     });
   }
+
+editUser(user: User) {
+  Swal.fire({
+    title: `Editar Usuario: ${user.nombre}`,
+    html: `
+      <input type="text" id="swal-nombre" class="swal2-input" placeholder="Nombre" value="${user.nombre}">
+      <input type="email" id="swal-email" class="swal2-input" placeholder="Email" value="${user.email}">
+      <input type="tel" id="swal-telefono" class="swal2-input" placeholder="Teléfono" value="${user.telefono}">
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const nombre = (document.getElementById('swal-nombre') as HTMLInputElement).value.trim();
+      const email = (document.getElementById('swal-email') as HTMLInputElement).value.trim();
+      const telefono = (document.getElementById('swal-telefono') as HTMLInputElement).value.trim();
+
+      if (!nombre) {
+        Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        Swal.showValidationMessage('Email inválido');
+        return false;
+      }
+
+      return { nombre, email, telefono };
+    },
+  }).then((result) => {
+    if (result.isConfirmed && result.value) {
+      const { nombre, email, telefono } = result.value;
+      this.adminService.updateUser(user.id, { nombre, email, telefono }).subscribe({
+        next: () => {
+          Swal.fire('Actualizado', 'Usuario actualizado correctamente', 'success');
+          this.loadUsers();
+        },
+        error: () => Swal.fire('Error', 'No se pudo actualizar el usuario', 'error'),
+      });
+    }
+  });
+}
+
+
+editZonas(user: User) {
+  if (user.rol !== 2) {
+    Swal.fire('Info', 'Solo los repartidores pueden tener zonas asignadas', 'info');
+    return;
+  }
+
+  // Obtener zonas del repartidor
+  this.adminService.getRepartidorZonas(user.id).subscribe({
+    next: (zonas: Zona[]) => {
+      const renderModal = () => {
+        Swal.fire({
+          title: `Zonas de ${user.nombre}`,
+          html: `
+            <div id="zonas-list" style="text-align:left; margin-bottom: 1rem;">
+              ${zonas.length ? zonas.map((z, i) => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                  <span>${z.municipio} - Zona ${z.zona}</span>
+                  <button type="button" class="swal2-confirm swal2-styled remove-btn" data-index="${i}" style="background:red; margin-left:10px;">Eliminar</button>
+                </div>
+              `).join('') : '<p>No tiene zonas asignadas</p>'}
+            </div>
+            <hr>
+            <input type="text" id="swal-municipio" class="swal2-input" placeholder="Nuevo Municipio">
+            <input type="number" id="swal-zona" class="swal2-input" placeholder="Número de zona">
+          `,
+          showCancelButton: true,
+          confirmButtonText: 'Agregar zona',
+          cancelButtonText: 'Cerrar',
+          didOpen: () => {
+            // Asignar eventos a botones de eliminar
+            const removeButtons = document.querySelectorAll<HTMLButtonElement>('.remove-btn');
+            removeButtons.forEach(btn => {
+              btn.addEventListener('click', () => {
+				const index = Number(btn.dataset["index"]);
+                const z = zonas[index];
+                this.adminService.removeZona(user.id, z.municipio, z.zona).subscribe({
+                  next: () => {
+                    Swal.fire('Eliminado', `Zona ${z.zona} de ${z.municipio} removida`, 'success');
+                    zonas.splice(index, 1);
+                    renderModal(); // Recargar modal
+                  },
+                  error: () => Swal.fire('Error', 'No se pudo quitar la zona', 'error')
+                });
+              });
+            });
+          },
+          preConfirm: () => {
+            const municipio = (document.getElementById('swal-municipio') as HTMLInputElement).value.trim();
+            const zona = Number((document.getElementById('swal-zona') as HTMLInputElement).value);
+            if (!municipio) {
+              Swal.showValidationMessage('El municipio es obligatorio');
+              return false;
+            }
+            if (!zona || zona < 1) {
+              Swal.showValidationMessage('Zona inválida');
+              return false;
+            }
+            return { municipio, zona };
+          }
+        }).then((result) => {
+          if (result.isConfirmed && result.value) {
+            const { municipio, zona } = result.value;
+            this.adminService.assignZona(user.id, municipio, zona).subscribe({
+              next: () => {
+                Swal.fire('Agregado', `Zona ${zona} de ${municipio} asignada`, 'success');
+                zonas.push({ municipio, zona });
+                renderModal(); // Recargar modal
+              },
+              error: (err) => Swal.fire('Error', err.error?.error || 'No se pudo asignar la zona', 'error')
+            });
+          }
+        });
+      };
+      renderModal();
+    },
+    error: () => Swal.fire('Error', 'No se pudieron cargar las zonas', 'error')
+  });
+}
+
 
   getRoleName(rol: number): string {
     switch (rol) {

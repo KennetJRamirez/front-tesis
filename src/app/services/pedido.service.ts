@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PedidoRequest, PedidoResponse } from '../pages/cliente/pedido/pedido.model';
 import { Pedido } from '../pages/cliente/mis-pedidos/mis-pedidos.component';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PedidoService {
-  private baseUrl = 'http://localhost:3000';
+  //private baseUrl = 'http://localhost:3000';
+    private baseUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
 

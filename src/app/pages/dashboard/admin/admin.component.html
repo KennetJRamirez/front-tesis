@@ -1,7 +1,7 @@
 <mat-card style="padding: 3rem; margin: 2rem; max-width: 1200px; margin-left:auto; margin-right:auto;">
   <h2 style="margin-bottom: 1rem;">Gestión de Usuarios</h2>
 
-  <!-- Búsqueda estilizada -->
+  <!-- Buscador -->
   <div class="search-container">
     <mat-icon class="search-icon">search</mat-icon>
     <input
@@ -16,7 +16,9 @@
     </button>
   </div>
 
+  <!-- Tabla de usuarios -->
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
     <!-- ID -->
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef style="font-weight: bold;">ID</mat-header-cell>
@@ -62,11 +64,22 @@
       <mat-header-cell *matHeaderCellDef style="font-weight: bold;">Acciones</mat-header-cell>
       <mat-cell *matCellDef="let user">
         <button mat-raised-button color="accent" (click)="viewUser(user.id)">Ver</button>
+        <button mat-raised-button color="primary" (click)="editUser(user)">Editar</button>
+        <!-- Botón Zonas solo para repartidores -->
+        <button 
+          mat-raised-button 
+          color="warn" 
+          *ngIf="user.rol === 2" 
+          (click)="editZonas(user)">
+          Zonas
+        </button>
       </mat-cell>
     </ng-container>
 
+    <!-- Header y filas -->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
   </mat-table>
 
   <!-- Paginador -->

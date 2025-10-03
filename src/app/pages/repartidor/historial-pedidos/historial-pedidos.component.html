@@ -1,12 +1,12 @@
-<h2>📜 Historial de Pedidos</h2>
+<h2>Historial de Pedidos</h2>
 
-<!-- 🔍 Buscador -->
+<!-- Buscador -->
 <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 1rem;">
   <mat-label>Buscar</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar pedidos..." />
 </mat-form-field>
 
-<!-- 📋 Tabla con sort y paginator -->
+<!-- Tabla con sort y paginator -->
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
   <!-- ID -->
@@ -72,5 +72,5 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<!-- 📌 Paginación -->
+<!-- Paginación -->
 <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>

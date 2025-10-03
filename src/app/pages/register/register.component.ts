@@ -72,7 +72,7 @@ onSubmit() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'No se pudo registrar el usuario 😅',
+        text: 'No se pudo registrar el usuario',
       });
       return of(null);
     })

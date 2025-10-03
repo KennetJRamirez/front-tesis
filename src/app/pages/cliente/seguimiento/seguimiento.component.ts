@@ -9,11 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import * as mapboxgl from 'mapbox-gl';
 
-// 👇 Angular Material
+// Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ClienteService } from '../../../services/cliente.service';
+
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-seguimiento',
@@ -57,7 +59,7 @@ export class SeguimientoComponent implements OnInit, AfterViewInit {
         const lng = Number(pos.longitud);
 
         if (isNaN(lat) || isNaN(lng)) {
-          console.error('❌ Coordenadas inválidas:', pos);
+          console.error('Coordenadas inválidas:', pos);
           return;
         }
 
@@ -77,12 +79,12 @@ export class SeguimientoComponent implements OnInit, AfterViewInit {
 
 initMap(lat: number, lng: number): void {
   if (this.map) {
-    this.map.flyTo({ center: [lng, lat], zoom: 16 }); // 🔥 zoom más cercano
+    this.map.flyTo({ center: [lng, lat], zoom: 16 }); //  zoom
     return;
   }
 
   this.map = new mapboxgl.Map({
-    accessToken: 'pk.eyJ1Ijoia2pvYWJodWIiLCJhIjoiY21jdTJtaWJvMDI0YzJrcHFqNG8xZjVxMyJ9.BXNOufhvWWSIdcWkgN-I-g',
+    accessToken: environment.mapboxToken,
     container: this.mapContainer.nativeElement,
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [lng, lat],
@@ -93,7 +95,6 @@ initMap(lat: number, lng: number): void {
     .setLngLat([lng, lat])
     .addTo(this.map);
 
-  // 👇 aseguramos que el mapa se ajuste al marcador
   this.map.on('load', () => {
     this.map.fitBounds([[lng, lat], [lng, lat]], {
       padding: 100,

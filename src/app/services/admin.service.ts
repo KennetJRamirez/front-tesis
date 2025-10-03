@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+
+
+interface Zona {
+  municipio: string;
+  zona: number;
+}
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl = 'http://localhost:3000/admin';
+  private baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 
@@ -19,6 +27,7 @@ export class AdminService {
       }),
     };
   }
+
 
   // ---- Usuarios ----
   getAllUsers(): Observable<any> {
@@ -48,6 +57,10 @@ export class AdminService {
     );
   }
 
+  updateUser(id: number, data: { nombre: string; email: string; telefono: string }) {
+	 return this.http.put(`${this.baseUrl}/usuarios/${id}`, data, this.getAuthHeaders());
+	}
+
   // ---- Reportes ----
   getPedidosPorEstado(): Observable<any> {
     return this.http.get(
@@ -75,5 +88,21 @@ export class AdminService {
       `${this.baseUrl}/reportes/entregas-repartidor`,
       this.getAuthHeaders()
     );
+  }
+  
+  // ---- Zonas de repartidor ----
+  getRepartidorZonas(id: number): Observable<Zona[]> {
+    return this.http.get<Zona[]>(`${this.baseUrl}/usuarios/${id}/zonas`, this.getAuthHeaders());
+  }
+
+  assignZona(id: number, municipio: string, zona: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/usuarios/${id}/zonas`, { municipio, zona }, this.getAuthHeaders());
+  }
+
+  removeZona(id: number, municipio: string, zona: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/usuarios/${id}/zonas`, {
+      ...this.getAuthHeaders(),
+      body: { municipio, zona },
+    });
   }
 }

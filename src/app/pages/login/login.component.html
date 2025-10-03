@@ -1,9 +1,6 @@
-<!-- Fondo centrado con flex layout -->
-<div
-  style="display:flex; justify-content:center; align-items:center; height:100vh; background: linear-gradient(135deg, #2196f3, #21cbf3);">
+<div style="display:flex; justify-content:center; align-items:center; height:100vh; background: linear-gradient(135deg, #2196f3, #21cbf3);">
 
-  <mat-card appearance="outlined"
-    style="width: 380px; padding: 2rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+  <mat-card appearance="outlined" style="width: 380px; padding: 2rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
 
     <mat-card-header>
       <mat-card-title style="text-align:center; font-size:1.8rem; color:#1976d2;">Iniciar Sesión</mat-card-title>
@@ -28,11 +25,21 @@
         <input matInput type="password" formControlName="password" />
         <mat-icon matSuffix>lock</mat-icon>
         <mat-error *ngIf="password?.hasError('required')">La contraseña es obligatoria</mat-error>
-        <mat-error *ngIf="password?.hasError('minlength')">Debe tener al menos 6 caracteres</mat-error>
+        <mat-error *ngIf="password?.hasError('minlength')">Debe tener al menos 8 caracteres</mat-error>
       </mat-form-field>
 
-      <!-- Botón -->
-      <button mat-raised-button color="primary" class="full-width" [disabled]="loginForm.invalid"
+      <!-- hCaptcha -->
+      <ng-hcaptcha
+        formControlName="captcha"
+        (verify)="onVerify($event)"
+        (expired)="onExpired()"
+        (error)="onError($event)"
+        style="margin: 1rem 0;">
+      </ng-hcaptcha>
+
+      <!-- Botón solo habilitado si formulario válido y captcha completado -->
+      <button mat-raised-button color="primary" class="full-width"
+        [disabled]="loginForm.invalid || !captchaToken"
         style="margin-top:1rem;">
         Entrar
       </button>

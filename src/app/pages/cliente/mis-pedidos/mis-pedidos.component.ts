@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
+import { environment } from '../../../../environments/environment';
 
 export interface Pedido {
   id_pedido: number;
@@ -21,12 +23,12 @@ export interface Pedido {
 @Component({
   selector: 'app-mis-pedidos',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatPaginatorModule],
   templateUrl: './mis-pedidos.component.html',
   styleUrls: ['./mis-pedidos.component.css'],
 })
-export class MisPedidosComponent implements OnInit {
-  pedidos: Pedido[] = [];
+export class MisPedidosComponent implements OnInit, AfterViewInit {
+  pedidos = new MatTableDataSource<Pedido>([]);
   displayedColumns: string[] = [
     'id_pedido',
     'paquete',
@@ -38,10 +40,16 @@ export class MisPedidosComponent implements OnInit {
     'seguimiento',
   ];
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(private pedidoService: PedidoService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarPedidos();
+  }
+
+  ngAfterViewInit() {
+    this.pedidos.paginator = this.paginator;
   }
 
   cargarPedidos() {
@@ -52,8 +60,8 @@ export class MisPedidosComponent implements OnInit {
     }
 
     this.pedidoService.getMisPedidos(token).subscribe({
-      next: (res) => {
-        this.pedidos = res;
+      next: (res: Pedido[]) => {
+        this.pedidos.data = res;
       },
       error: (err: any) => {
         console.error(err);

@@ -62,7 +62,10 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <div *ngIf="pedidos.length === 0" class="no-pedidos">
+    <!-- Paginador de Angular Material -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <div *ngIf="pedidos.data.length === 0" class="no-pedidos">
       No tienes pedidos todavía.
     </div>
   </mat-card-content>

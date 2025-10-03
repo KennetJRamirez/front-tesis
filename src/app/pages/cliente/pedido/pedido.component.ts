@@ -87,7 +87,7 @@ export class PedidoComponent implements OnInit {
           if (result.isConfirmed) {
             this.pedidoService.crearPedido(pedidoData, this.token).subscribe({
               next: (res: PedidoResponse) =>
-                Swal.fire('Pedido creado 🎉', `Costo: Q${res.costo.toFixed(2)}`, 'success'),
+                Swal.fire('Pedido creado', `Costo: Q${res.costo.toFixed(2)}`, 'success'),
               error: (err) =>
                 Swal.fire('Error', err.error?.error || 'No se pudo crear el pedido', 'error'),
             });

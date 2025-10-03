@@ -5,7 +5,7 @@ import { Chart, ChartData, registerables } from 'chart.js';
 import { MatCardModule } from '@angular/material/card';
 import { AdminService } from '../../../services/admin.service';
 
-// 👈 Registrar todos los tipos de gráficos
+// Gráficos
 Chart.register(...registerables);
 
 // Interfaces para tipado de respuesta
@@ -38,7 +38,7 @@ export class AdminReportesComponent implements OnInit {
   }
 
 loadPedidosPorEstado() {
-  const estados = ['En tránsito', 'Entregado', 'Recolectado']; // todos los estados
+  const estados = ['En tránsito', 'Entregado', 'Recolectado']; 
   this.adminService.getPedidosPorEstado().subscribe((res: PedidoEstado[]) => {
     this.pedidosEstadoData = {
       labels: estados,
@@ -57,7 +57,7 @@ loadIngresosPorDia() {
     this.ingresosData = {
       labels: res.map(r => {
         const fecha = new Date(r.fecha);
-        return `${fecha.getDate()}/${fecha.getMonth() + 1}`; // 25/9
+        return `${fecha.getDate()}/${fecha.getMonth() + 1}`; 
       }),
       datasets: [{ data: res.map(r => r.ingresos), label: 'Ingresos' }]
     };

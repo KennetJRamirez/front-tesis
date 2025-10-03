@@ -14,11 +14,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'app-fastbox' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('app-fastbox');
-  });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);

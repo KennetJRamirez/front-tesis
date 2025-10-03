@@ -26,13 +26,17 @@ import Swal from 'sweetalert2';
 })
 export class PedidosActivosComponent implements OnInit {
   pedidos: any[] = [];
-  trackingId: number | null = null;   // para watchPosition
-  trackingInterval: any = null;       // fallback con setInterval
+
+  // Cada id_envio tiene su propio tracking
+  trackingData: {
+    [id_envio: number]: { watchId: number; interval: any };
+  } = {};
 
   constructor(private repartidorService: RepartidorService) {}
 
   ngOnInit() {
     this.cargarPedidos();
+    this.restoreTrackingFromStorage(); // Recupera tracking activo al cargar la página
   }
 
   cargarPedidos() {
@@ -59,7 +63,7 @@ export class PedidosActivosComponent implements OnInit {
           direccion_destino: {
             calle_principal: p.destino_calle,
             numero: p.destino_numero,
-            calle_secundaria: p.destino_secundaria,
+            calle_secundaria: p.destino_destino,
             colonia_o_barrio: p.destino_colonia,
             zona: p.destino_zona,
             municipio: p.destino_municipio,
@@ -85,8 +89,12 @@ export class PedidosActivosComponent implements OnInit {
       return;
     }
 
-    // watchPosition (cambios inmediatos)
-    this.trackingId = navigator.geolocation.watchPosition(
+    if (this.trackingData[id_envio]) {
+      console.log(`⚠Ya hay tracking activo para el pedido ${id_envio}`);
+      return;
+    }
+
+    const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         this.repartidorService.savePosition(id_envio, pos.coords.latitude, pos.coords.longitude).subscribe();
       },
@@ -94,8 +102,7 @@ export class PedidosActivosComponent implements OnInit {
       { enableHighAccuracy: true, maximumAge: 0 }
     );
 
-    // Fallback cada 30s (por si watchPosition no actualiza)
-    this.trackingInterval = setInterval(() => {
+    const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           this.repartidorService.savePosition(id_envio, pos.coords.latitude, pos.coords.longitude).subscribe();
@@ -105,51 +112,68 @@ export class PedidosActivosComponent implements OnInit {
       );
     }, 30000);
 
-    console.log('✅ Tracking iniciado');
+    this.trackingData[id_envio] = { watchId, interval };
+    this.saveTrackingToStorage();
+    console.log(`Tracking iniciado para pedido ${id_envio}`);
   }
 
-  stopTracking() {
-    if (this.trackingId !== null) {
-      navigator.geolocation.clearWatch(this.trackingId);
-      this.trackingId = null;
+  stopTracking(id_envio: number) {
+    const tracking = this.trackingData[id_envio];
+    if (tracking) {
+      navigator.geolocation.clearWatch(tracking.watchId);
+      clearInterval(tracking.interval);
+      delete this.trackingData[id_envio];
+      this.saveTrackingToStorage();
+      console.log(`Tracking detenido para pedido ${id_envio}`);
     }
-    if (this.trackingInterval) {
-      clearInterval(this.trackingInterval);
-      this.trackingInterval = null;
+  }
+
+  // ===================== LOCALSTORAGE =====================
+
+  saveTrackingToStorage() {
+    const activeIds = Object.keys(this.trackingData).map((id) => Number(id));
+    localStorage.setItem('trackingPedidos', JSON.stringify(activeIds));
+  }
+
+  restoreTrackingFromStorage() {
+    const saved = localStorage.getItem('trackingPedidos');
+    if (saved) {
+      const ids: number[] = JSON.parse(saved);
+      ids.forEach((id_envio) => this.startTracking(id_envio));
     }
-    console.log('🛑 Tracking detenido');
   }
 
   // ===================== ESTADOS =====================
-iniciarRecoleccion(id_envio: number) {
-  this.repartidorService.iniciarRecoleccion(id_envio).subscribe(() => {
+
+  iniciarRecoleccion(id_envio: number) {
+    this.repartidorService.iniciarRecoleccion(id_envio).subscribe(() => {
+      this.startTracking(id_envio);
+      Swal.fire('Tracking', 'Se inició la recolección y se notificó al cliente.', 'info');
+      this.cargarPedidos();
+    });
+  }
+
+  marcarRecolectado(id_envio: number) {
+    this.stopTracking(id_envio);
+    this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
+      Swal.fire('Éxito', 'Pedido marcado como Recolectado', 'success');
+      this.cargarPedidos();
+    });
+  }
+
+  iniciarEntrega(id_envio: number) {
     this.startTracking(id_envio);
-    Swal.fire('Tracking', 'Se inició la recolección y se notificó al cliente.', 'info');
-    this.cargarPedidos();
-  });
-}
+    this.repartidorService.iniciarEntrega(id_envio).subscribe(() => {
+      Swal.fire('Tracking', 'Se inició la entrega y se notificó al destinatario.', 'info');
+      this.cargarPedidos();
+    });
+  }
 
-marcarRecolectado(id_envio: number) {
-  this.stopTracking();
-  this.repartidorService.marcarRecolectado(id_envio).subscribe(() => {
-    Swal.fire('Éxito', 'Pedido marcado como Recolectado', 'success');
-    this.cargarPedidos();
-  });
-}
-
-iniciarEntrega(id_envio: number) {
-  this.repartidorService.iniciarEntrega(id_envio).subscribe(() => {
-    this.startTracking(id_envio);
-    Swal.fire('Tracking', 'Se inició la entrega y se notificó al destinatario.', 'info');
-    this.cargarPedidos();
-  });
-}
-
-marcarEntregado(id_envio: number) {
-  this.stopTracking();
-  this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
-    Swal.fire('Éxito', 'Pedido marcado como Entregado', 'success');
-    this.cargarPedidos();
-  });
-}
+  marcarEntregado(id_envio: number) {
+    this.stopTracking(id_envio);
+    this.repartidorService.marcarEntregado(id_envio).subscribe(() => {
+      Swal.fire('Éxito', 'Pedido marcado como Entregado', 'success');
+      this.cargarPedidos();
+    });
+  }
 }

@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { catchError, of } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NgHcaptchaModule } from 'ng-hcaptcha';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,11 +26,14 @@ import Swal from 'sweetalert2';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    NgHcaptchaModule, 
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  captchaToken: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -38,14 +43,31 @@ export class LoginComponent {
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    captcha: ['', Validators.required],
   });
 
+  onVerify(token: string) {
+    this.captchaToken = token;
+    this.loginForm.patchValue({ captcha: token });
+  }
+
+  onExpired() {
+    this.captchaToken = null;
+    this.loginForm.patchValue({ captcha: '' });
+  }
+
+  onError(error: any) {
+    console.error('hCaptcha error:', error);
+    this.captchaToken = null;
+    this.loginForm.patchValue({ captcha: '' });
+  }
+
   onSubmit() {
-    if (this.loginForm.invalid) {
-      // Validación de campos
+    if (this.loginForm.invalid || !this.captchaToken) {
       const errors = [];
       if (this.email?.invalid) errors.push('Email inválido');
       if (this.password?.invalid) errors.push('Contraseña inválida');
+      if (!this.captchaToken) errors.push('Captcha requerido');
 
       Swal.fire({
         icon: 'error',
@@ -55,9 +77,10 @@ export class LoginComponent {
       return;
     }
 
-    const loginData = this.loginForm.getRawValue() as {
-      email: string;
-      password: string;
+    const loginData = {
+      email: this.loginForm.value.email || '',
+      password: this.loginForm.value.password || '',
+      captcha: this.captchaToken || '',
     };
 
     this.authService
@@ -86,6 +109,7 @@ export class LoginComponent {
         }
       });
   }
+
   get email() {
     return this.loginForm.get('email');
   }

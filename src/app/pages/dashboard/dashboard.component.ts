@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'No se pudo cerrar sesión 😅',
+              text: 'No se pudo cerrar sesión',
             });
           },
         });
